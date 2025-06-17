@@ -2,11 +2,14 @@
 
 Game::Game(int width, int height, const char* title)
     : screenWidth(width), screenHeight(height) {
-
+    
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(screenWidth, screenHeight, title);
     SetTargetFPS(60);
 
-    lavaObject.Load("assets/lava.vs", "assets/lava.fs");
+    uiManager.Setup();
+
+    lavaObject.Load();
 
     camera = { 0 };
     camera.position = Vector3{ 5.0f, 5.0f, 5.0f };
@@ -17,6 +20,7 @@ Game::Game(int width, int height, const char* title)
 }
 
 Game::~Game() {
+    uiManager.Shutdown();
     CloseWindow();
 }
 
@@ -29,10 +33,11 @@ void Game::Run() {
 
 void Game::Update() {
     UpdateCamera(&camera, CAMERA_ORBITAL);
-    lavaObject.Update();
+    lavaObject.Update(uiManager);
 }
 
-void Game::Draw() {
+void Game::Draw()
+{
     BeginDrawing();
     ClearBackground(BLACK);
 
@@ -44,7 +49,18 @@ void Game::Draw() {
     EndMode3D();
 
     DrawFPS(10, 10);
-    DrawText("Move camera with mouse, scroll to zoom", 10, 40, 20, WHITE);
+
+
+    BeginBlendMode(BLEND_ALPHA);
+
+    uiManager.Begin();
+    {
+        uiManager.DrawControls();
+    }
+    uiManager.End();
+
+    EndBlendMode();
+
 
     EndDrawing();
 }

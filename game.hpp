@@ -3,6 +3,7 @@
 
 #include "raylib.h"
 #include "lava.hpp"
+#include "UIManager.hpp"
 
 class Game {
 public:
@@ -19,6 +20,7 @@ private:
     int screenHeight;
     Camera3D camera;
     Lava lavaObject;
+    UIManager uiManager;
 };
 
 #endif // GAME_HPP
